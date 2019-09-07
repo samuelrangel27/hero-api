@@ -13,4 +13,7 @@
     <ProjectReference Include="..\hero.transversal\hero.transversal.csproj" />
     <ProjectReference Include="..\hero.domain\hero.domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.1.1" />
+  </ItemGroup>
 </Project>

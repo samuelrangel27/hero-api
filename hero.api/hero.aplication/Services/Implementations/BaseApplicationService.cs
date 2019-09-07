@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using hero.aplication.Services.Interfaces;
 using hero.domain.Entities;
 using hero.domain.Repositories;
@@ -11,10 +12,11 @@ namespace hero.aplication.Services.Implementations
 {
     public class BaseApplicationService<TEntity> : IApplicationService<TEntity> where TEntity : BaseEntity
     {
-        private readonly IBaseRepository<TEntity> _repository;
+        protected readonly IBaseRepository<TEntity> _repository;
 
         public BaseApplicationService(IBaseRepository<TEntity> repository)
         {
+            
             this._repository = repository;
         }
 
@@ -53,16 +55,33 @@ namespace hero.aplication.Services.Implementations
     {
         public BaseApplicationService(IBaseRepository<TEntity> repository) : base(repository)
         {
+            Mapper.Initialize(cfg => cfg.CreateMap<TInsert, TEntity>());
         }
 
         public ApiResult<TEntity> Add(TInsert obj)
         {
-            throw new NotImplementedException();
+            TEntity entity = Mapper.Map<TEntity>(obj);
+            return base.Add(entity);
         }
 
         public ApiResult<TEntity> Update(TInsert obj)
         {
-            throw new NotImplementedException();
+            TEntity entity = Mapper.Map<TEntity>(obj);
+            return base.Update(entity);
+        }
+    }
+
+    public class BaseApplicationService<TEntity, TInsert, TUpdate> : BaseApplicationService<TEntity, TInsert>, IApplicationService<TEntity, TInsert, TUpdate> where TEntity : BaseEntity
+    {
+        public BaseApplicationService(IBaseRepository<TEntity> repository) : base(repository)
+        {
+            Mapper.Initialize(cfg => cfg.CreateMap<TUpdate, TEntity>());
+        }
+
+        public ApiResult<TEntity> Update(TUpdate obj)
+        {
+            var entity = Mapper.Map<TEntity>(obj);
+            return base.Update(entity);
         }
     }
 }
