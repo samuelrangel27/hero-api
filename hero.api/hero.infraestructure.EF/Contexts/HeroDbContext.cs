@@ -13,7 +13,7 @@ namespace hero.infraestructure.EF.Contexts
         {
         }
 
-        public HeroDbContext(DbContextOptions options) : base(options)
+        public HeroDbContext(DbContextOptions<HeroDbContext> options) : base(options)
         {
         }
     }

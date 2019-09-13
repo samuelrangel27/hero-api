@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using hero.api.Entities;
 using hero.api.Results;
+using hero.aplication.Services.Interfaces;
+using hero.domain.Entities;
+using hero.transversal.Results;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -13,11 +15,11 @@ namespace hero.api.Controllers
     [Route("api/[controller]")]
     public class HeroController : Controller
     {
-        private readonly HeroDbContext dbContext;
+        private readonly IHeroApplicationService _heroService;
 
-        public HeroController(HeroDbContext dbContext)
+        public HeroController(IHeroApplicationService heroService)
         {
-            this.dbContext = dbContext;
+            this._heroService = heroService;
         }
 
         /// <summary>
@@ -25,14 +27,11 @@ namespace hero.api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult<IEnumerable<Hero>> Get()
+        public ActionResult<ApiResult<IEnumerable<Hero>>> Get()
         {
-            return Ok(new ApiResult
-            {
-                Data = dbContext.Heroes.ToList(),
-                Message = "Hero information"
-            });
+            return _heroService.GetAll();
         }
+        /*
 
         /// <summary>
         /// Creates a new Hero 
@@ -129,5 +128,8 @@ namespace hero.api.Controllers
             result.Message = "Everything is ok";
             return Ok(result);
         }
+        */
+
+
     }
 }

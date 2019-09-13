@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using hero.api.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -15,6 +14,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using hero.infraestructure.EF.Contexts;
+using hero.domain.Repositories;
+using hero.infraestructure.EF.Repositories;
+using hero.domain.Entities;
+using hero.aplication.Services.Interfaces;
+using hero.aplication.Services.Implementations;
 
 namespace hero.api
 {
@@ -33,6 +38,13 @@ namespace hero.api
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             var connectionString = "Data Source=Hero.db";
             services.AddDbContext<HeroDbContext>(options => options.UseSqlite(connectionString));
+
+            // Repositories
+            services.AddScoped(typeof(IBaseRepository<>),typeof(BaseRepository<>));
+
+            // Application Services
+            services.AddScoped<IHeroApplicationService, HeroApplicationService>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
