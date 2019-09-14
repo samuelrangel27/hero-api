@@ -1,8 +1,9 @@
 ﻿using System;
+using hero.domain.Entities;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace hero.api.Entities
+namespace hero.infraestructure.EF.Contexts
 {
     public class HeroDbContext: DbContext
     {
@@ -12,7 +13,7 @@ namespace hero.api.Entities
         {
         }
 
-        public HeroDbContext(DbContextOptions options) : base(options)
+        public HeroDbContext(DbContextOptions<HeroDbContext> options) : base(options)
         {
         }
     }
