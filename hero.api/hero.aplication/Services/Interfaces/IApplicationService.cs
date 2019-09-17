@@ -21,7 +21,7 @@ namespace hero.aplication.Services.Interfaces
 
     public interface IApplicationService<TEntity, TInsert> : IApplicationServiceBase<TEntity>,
         IApplicationServiceAdd<TEntity,TInsert>,
-        IApplicationServiceUpdate<TEntity,TInsert>
+        IApplicationServiceUpdate<TEntity,TEntity>
         where TEntity : BaseEntity
     {
     }
