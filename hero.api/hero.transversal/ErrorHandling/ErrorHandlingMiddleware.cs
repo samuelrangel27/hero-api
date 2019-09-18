@@ -29,8 +29,11 @@ namespace hero.transversal.ErrorHandling
                 using (var responseBody = new MemoryStream())
                 {
                     //...and use that for the temporary response body
+                    /*
                     context.Response.Body = responseBody;
+                    */
                     await _next(context);
+                    /*
                     context.Response.Body.Position = 0;
                     var bodyText = await new StreamReader(context.Response.Body).ReadToEndAsync();
                     dynamic apiResult = JsonConvert.DeserializeObject<object>(bodyText);
@@ -47,6 +50,7 @@ namespace hero.transversal.ErrorHandling
                             code = HttpStatusCode.OK;
                             break;
                     }
+                    */
                 }
             }
             catch (Exception ex)
@@ -55,7 +59,7 @@ namespace hero.transversal.ErrorHandling
                 code = HttpStatusCode.InternalServerError;
             }
             finally {
-                context.Response.StatusCode = (int)code;
+                //context.Response.StatusCode = (int)code;
             }
         }
 

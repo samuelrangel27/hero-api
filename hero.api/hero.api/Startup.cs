@@ -21,6 +21,8 @@ using hero.domain.Entities;
 using hero.aplication.Services.Interfaces;
 using hero.aplication.Services.Implementations;
 using hero.transversal.ErrorHandling;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace hero.api
 {
@@ -90,7 +92,10 @@ namespace hero.api
             {
                 using (var context = serviceScope.ServiceProvider.GetService<HeroDbContext>())
                 {
-                    context.Database.Migrate();
+                    if (!(context.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator).Exists())
+                        context.Database.EnsureCreated();
+                    else if(context.Database.GetPendingMigrations().Count() > 0)
+                        context.Database.Migrate();
                 }
             }
         }
