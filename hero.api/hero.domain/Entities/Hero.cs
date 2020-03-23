@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace hero.domain.Entities
 {
-    public class Hero : BaseEntity
+    public class Hero : BaseEntity<int>
     {
         [Required]
         public string Name { get; set; }

@@ -5,40 +5,40 @@ using hero.transversal.Results;
 
 namespace hero.aplication.Services.Interfaces
 {
-    public interface IApplicationServiceBase<TEntity> where TEntity: BaseEntity
+    public interface IApplicationServiceBase<TEntity,TKey> where TEntity: BaseEntity<TKey>
     {
-        ApiResult<TEntity> GetById(int id);
+        ApiResult<TEntity> GetById(TKey id);
         ApiResult<IEnumerable<TEntity>> GetAll();
-        ApiResult<TEntity> Delete(int id);
+        ApiResult<TEntity> Delete(TKey id);
     }
 
-    public interface IApplicationService<TEntity>: IApplicationServiceBase<TEntity>,
-        IApplicationServiceAdd<TEntity, TEntity>,
-        IApplicationServiceUpdate<TEntity,TEntity>
-        where TEntity: BaseEntity
+    public interface IApplicationService<TEntity,TKey>: IApplicationServiceBase<TEntity,TKey>,
+        IApplicationServiceAdd<TEntity, TKey, TEntity>,
+        IApplicationServiceUpdate<TEntity, TKey,TEntity>
+        where TEntity: BaseEntity<TKey>
     {
     }
 
-    public interface IApplicationService<TEntity, TInsert> : IApplicationServiceBase<TEntity>,
-        IApplicationServiceAdd<TEntity,TInsert>,
-        IApplicationServiceUpdate<TEntity,TInsert>
-        where TEntity : BaseEntity
+    public interface IApplicationService<TEntity,TKey, TInsert> : IApplicationServiceBase<TEntity,TKey>,
+        IApplicationServiceAdd<TEntity,TKey,TInsert>,
+        IApplicationServiceUpdate<TEntity,TKey,TInsert>
+        where TEntity : BaseEntity<TKey>
     {
     }
 
-    public interface IApplicationService<TEntity,TInsert,TUpdate> : IApplicationServiceBase<TEntity>,
-        IApplicationServiceAdd<TEntity, TInsert>,
-        IApplicationServiceUpdate<TEntity, TUpdate>
-        where TEntity : BaseEntity
+    public interface IApplicationService<TEntity,TKey,TInsert,TUpdate> : IApplicationServiceBase<TEntity,TKey>,
+        IApplicationServiceAdd<TEntity,TKey, TInsert>,
+        IApplicationServiceUpdate<TEntity,TKey, TUpdate>
+        where TEntity : BaseEntity<TKey>
     {
     }
 
-    public interface IApplicationServiceAdd<TEntity,TInsert> where TEntity: BaseEntity
+    public interface IApplicationServiceAdd<TEntity,TKey,TInsert> where TEntity: BaseEntity<TKey>
     {
         ApiResult<TEntity> Add(TInsert obj);
     }
 
-    public interface IApplicationServiceUpdate<TEntity, TUpdate> where TEntity : BaseEntity
+    public interface IApplicationServiceUpdate<TEntity,TKey, TUpdate> where TEntity : BaseEntity<TKey>
     {
         ApiResult<TEntity> Update(TUpdate obj);
     }

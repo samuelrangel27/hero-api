@@ -16,5 +16,14 @@ namespace hero.infraestructure.EF.Contexts
         public HeroDbContext(DbContextOptions<HeroDbContext> options) : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Hero>()
+                .HasKey(h => h.Id);
+            modelBuilder.Entity<Hero>()
+                .Property(h => h.Id)
+                .ValueGeneratedOnAdd();
+        }
     }
 }

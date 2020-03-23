@@ -10,11 +10,11 @@ using hero.transversal.Results;
 
 namespace hero.aplication.Services.Implementations
 {
-    public class BaseApplicationService<TEntity> : IApplicationService<TEntity> where TEntity : BaseEntity
+    public class BaseApplicationService<TEntity,TKey> : IApplicationService<TEntity,TKey> where TEntity : BaseEntity<TKey>
     {
-        protected readonly IBaseRepository<TEntity> _repository;
+        protected readonly IBaseRepository<TEntity,TKey> _repository;
 
-        public BaseApplicationService(IBaseRepository<TEntity> repository)
+        public BaseApplicationService(IBaseRepository<TEntity,TKey> repository)
         {
             
             this._repository = repository;
@@ -26,7 +26,7 @@ namespace hero.aplication.Services.Implementations
             return ApiResult<TEntity>.Ok(obj, CommonMessages.OK);
         }
 
-        public virtual ApiResult<TEntity> Delete(int id)
+        public virtual ApiResult<TEntity> Delete(TKey id)
         {
             throw new NotImplementedException();
         }
@@ -38,7 +38,7 @@ namespace hero.aplication.Services.Implementations
             
         }
 
-        public virtual ApiResult<TEntity> GetById(int id)
+        public virtual ApiResult<TEntity> GetById(TKey id)
         {
             var entity = _repository.GetById(id);
             return ApiResult<TEntity>.Ok(entity, CommonMessages.OK);
@@ -51,9 +51,9 @@ namespace hero.aplication.Services.Implementations
         }
     }
 
-    public class BaseApplicationService<TEntity, TInsert> : BaseApplicationService<TEntity>, IApplicationService<TEntity, TInsert> where TEntity : BaseEntity
+    public class BaseApplicationService<TEntity,TKey, TInsert> : BaseApplicationService<TEntity,TKey>, IApplicationService<TEntity, TKey, TInsert> where TEntity : BaseEntity<TKey>
     {
-        public BaseApplicationService(IBaseRepository<TEntity> repository) : base(repository)
+        public BaseApplicationService(IBaseRepository<TEntity,TKey> repository) : base(repository)
         {
             Mapper.Initialize(cfg => cfg.CreateMap<TInsert, TEntity>());
         }
@@ -71,9 +71,9 @@ namespace hero.aplication.Services.Implementations
         }
     }
 
-    public class BaseApplicationService<TEntity, TInsert, TUpdate> : BaseApplicationService<TEntity, TInsert>, IApplicationService<TEntity, TInsert, TUpdate> where TEntity : BaseEntity
+    public class BaseApplicationService<TEntity, TKey, TInsert, TUpdate> : BaseApplicationService<TEntity, TKey, TInsert>, IApplicationService<TEntity, TKey, TInsert, TUpdate> where TEntity : BaseEntity<TKey>
     {
-        public BaseApplicationService(IBaseRepository<TEntity> repository) : base(repository)
+        public BaseApplicationService(IBaseRepository<TEntity,TKey> repository) : base(repository)
         {
             Mapper.Initialize(cfg => cfg.CreateMap<TUpdate, TEntity>());
         }
@@ -84,4 +84,12 @@ namespace hero.aplication.Services.Implementations
             return base.Update(entity);
         }
     }
+
+    public class BaseApplicationService<TEntity> : BaseApplicationService<TEntity, int> where TEntity : BaseEntity<int>
+    {
+        public BaseApplicationService(IBaseRepository<TEntity, int> repository) : base(repository)
+        {
+        }
+    }
+
 }

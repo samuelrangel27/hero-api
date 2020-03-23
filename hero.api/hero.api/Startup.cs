@@ -41,6 +41,7 @@ namespace hero.api
 
             // Repositories
             services.AddScoped(typeof(IBaseRepository<>),typeof(BaseRepository<>));
+            services.AddScoped<IHeroRepository, HeroRepository>();
 
             // Application Services
             services.AddScoped<IHeroApplicationService, HeroApplicationService>();

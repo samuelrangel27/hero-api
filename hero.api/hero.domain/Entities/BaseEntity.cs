@@ -4,12 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace hero.domain.Entities
 {
-    public abstract class BaseEntity
+    public abstract class BaseEntity<TKey>
     {
-        [Key]
-        [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public TKey Id { get; set; }
         public DateTime CreationDate { get; set; }
         public BaseEntity()
         {

@@ -7,7 +7,7 @@ using hero.domain.Entities;
 
 namespace hero.infraestructure.EF.Repositories
 {
-    public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : BaseEntity
+    public class BaseRepository<TEntity,TKey> : IBaseRepository<TEntity,TKey> where TEntity : BaseEntity<TKey>
     {
         protected readonly HeroDbContext dbContext;
 
@@ -42,14 +42,22 @@ namespace hero.infraestructure.EF.Repositories
             return dbContext.Set<TEntity>().AsEnumerable();
         }
 
-        public TEntity GetById(int id)
+        public TEntity GetById(TKey id)
         {
-            return dbContext.Set<TEntity>().Where(x => x.Id == id).FirstOrDefault();
+            Comparer<TKey> comparer = Comparer<TKey>.Default;
+            return dbContext.Set<TEntity>().Where(x => comparer.Compare(x.Id, id) == 0).FirstOrDefault();
         }
 
         public void SaveChanges()
         {
             dbContext.SaveChanges();
+        }
+    }
+
+    public class BaseRepository<TEntity> : BaseRepository<TEntity, int> where TEntity : BaseEntity<int>
+    {
+        public BaseRepository(HeroDbContext dbContext) : base(dbContext)
+        {
         }
     }
 }

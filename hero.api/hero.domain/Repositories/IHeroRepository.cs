@@ -3,7 +3,7 @@ using hero.domain.Entities;
 
 namespace hero.domain.Repositories
 {
-    public interface IHeroRepository : IBaseRepository<Hero>
+    public interface IHeroRepository : IBaseRepository<Hero,int>
     {
     }
 }

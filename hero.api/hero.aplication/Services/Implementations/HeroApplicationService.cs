@@ -8,7 +8,7 @@ namespace hero.aplication.Services.Implementations
 {
     public class HeroApplicationService : BaseApplicationService<Hero>, IHeroApplicationService
     {
-        public HeroApplicationService(IBaseRepository<Hero> repository) : base(repository)
+        public HeroApplicationService(IHeroRepository repository) : base(repository)
         {
         }
     }
