@@ -9,8 +9,8 @@ using hero.infraestructure.EF.Contexts;
 namespace hero.infraestructure.EF.Migrations
 {
     [DbContext(typeof(HeroDbContext))]
-    [Migration("20190913035111_initialcreate")]
-    partial class initialcreate
+    [Migration("20190915003115_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

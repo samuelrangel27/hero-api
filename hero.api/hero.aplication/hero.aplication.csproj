@@ -8,12 +8,17 @@
     <Folder Include="Services\" />
     <Folder Include="Services\Interfaces\" />
     <Folder Include="Services\Implementations\" />
+    <Folder Include="DTOs\" />
+    <Folder Include="DTOs\Inputs\" />
+    <Folder Include="Mappers\" />
+    <Folder Include="DTOs\Inputs\Hero\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\hero.transversal\hero.transversal.csproj" />
     <ProjectReference Include="..\hero.domain\hero.domain.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="8.1.1" />
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace hero.infraestructure.EF.Migrations
 {
-    public partial class initialcreate : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +12,7 @@ namespace hero.infraestructure.EF.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("MySQL:AutoIncrement", true),
                     CreationDate = table.Column<DateTime>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     SuperPower = table.Column<string>(nullable: false)
