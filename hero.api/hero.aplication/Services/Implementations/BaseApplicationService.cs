@@ -8,6 +8,8 @@ using hero.domain.Entities;
 using hero.domain.Repositories;
 using hero.transversal.Constants;
 using hero.transversal.Results;
+using Netploy.Common.Base.Entities;
+using Netploy.Common.Base.Repositories;
 
 namespace hero.aplication.Services.Implementations
 {

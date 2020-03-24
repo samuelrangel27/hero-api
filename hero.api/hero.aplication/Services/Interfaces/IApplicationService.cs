@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using hero.domain.Entities;
 using hero.transversal.Results;
+using Netploy.Common.Base.Entities;
 
 namespace hero.aplication.Services.Interfaces
 {

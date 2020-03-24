@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Netploy.Common.Base.Entities;
 
 namespace hero.domain.Entities
 {

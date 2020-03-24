@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using hero.domain.Repositories;
 using hero.infraestructure.EF.Contexts;
 using System.Linq;
-using hero.domain.Entities;
+using Netploy.Common.Base.Repositories;
+using Netploy.Common.Base.Entities;
 
 namespace hero.infraestructure.EF.Repositories
 {

@@ -23,6 +23,7 @@ using hero.aplication.Services.Implementations;
 using hero.transversal.ErrorHandling;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+using Netploy.Common.Base.Repositories;
 
 namespace hero.api
 {

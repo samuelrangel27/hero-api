@@ -14,7 +14,7 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.6" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc2" />
         <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.17" />
-        <PackageReference Include="Netploy.Common" Version="1.0.0" />
+        <PackageReference Include="Netploy.Common" Version="1.0.1" />
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Results\" />
