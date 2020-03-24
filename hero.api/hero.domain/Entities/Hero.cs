@@ -1,0 +1,17 @@
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using Netploy.Common.Base.Entities;
+
+namespace hero.domain.Entities
+{
+    public class Hero : BaseEntity<int>
+    {
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        public string SuperPower { get; set; }
+        public Hero()
+        {
+        }
+    }
+}

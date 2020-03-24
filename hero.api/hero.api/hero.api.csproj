@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -13,10 +13,17 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.6" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc2" />
+        <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.17" />
+        <PackageReference Include="Netploy.Common" Version="1.0.1" />
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="Entities\" />
         <Folder Include="Results\" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\hero.aplication\hero.aplication.csproj" />
+      <ProjectReference Include="..\hero.domain\hero.domain.csproj" />
+      <ProjectReference Include="..\hero.infraestructure.EF\hero.infraestructure.EF.csproj" />
+      <ProjectReference Include="..\hero.transversal\hero.transversal.csproj" />
     </ItemGroup>
     <PropertyGroup>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>

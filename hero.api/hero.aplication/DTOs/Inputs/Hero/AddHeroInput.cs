@@ -1,19 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace hero.api.Entities
+namespace hero.aplication.DTOs.Inputs.Hero
 {
-    public class Hero
+    public class AddHeroInput
     {
-        [Key]
-        [Required]
-        public int Id { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
         public string SuperPower { get; set; }
-        public Hero()
-        {
-        }
     }
 }

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
+    <Folder Include="Services\Interfaces\" />
+    <Folder Include="Services\Implementations\" />
+    <Folder Include="DTOs\" />
+    <Folder Include="DTOs\Inputs\" />
+    <Folder Include="Mappers\" />
+    <Folder Include="DTOs\Inputs\Hero\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\hero.transversal\hero.transversal.csproj" />
+    <ProjectReference Include="..\hero.domain\hero.domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Netploy.Common" Version="1.0.1" />
+    <PackageReference Include="Netploy.Common.Application" Version="1.0.0" />
+  </ItemGroup>
+</Project>

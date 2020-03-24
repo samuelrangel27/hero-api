@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using hero.api.Entities;
 using hero.api.Results;
+using hero.aplication.DTOs.Inputs.Hero;
+using hero.aplication.Services.Interfaces;
+using hero.domain.Entities;
+using hero.transversal.Results;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -13,11 +16,11 @@ namespace hero.api.Controllers
     [Route("api/[controller]")]
     public class HeroController : Controller
     {
-        private readonly HeroDbContext dbContext;
+        private readonly IHeroApplicationService _heroService;
 
-        public HeroController(HeroDbContext dbContext)
+        public HeroController(IHeroApplicationService heroService)
         {
-            this.dbContext = dbContext;
+            this._heroService = heroService;
         }
 
         /// <summary>
@@ -25,13 +28,9 @@ namespace hero.api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult<IEnumerable<Hero>> Get()
+        public ActionResult<ApiResult<IEnumerable<Hero>>> Get()
         {
-            return Ok(new ApiResult
-            {
-                Data = dbContext.Heroes.ToList(),
-                Message = "Hero information"
-            });
+            return _heroService.GetAll();
         }
 
         /// <summary>
@@ -40,21 +39,9 @@ namespace hero.api.Controllers
         /// <param name="hero"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Post([FromBody] Hero hero)
+        public ActionResult<ApiResult<Hero>> Post([FromBody] AddHeroInput hero)
         {
-            var result = new ApiResult();
-            if (!ModelState.IsValid)
-            {
-                result.Message = "Invalid Hero Information";
-                result.IsError = true;
-                return BadRequest(result);
-            }
-                
-
-            dbContext.Heroes.Add(hero);
-            dbContext.SaveChanges();
-            result.Message = "Everything is ok";
-            return Ok(result);
+            return _heroService.Add(hero);
         }
 
         /// <summary>
@@ -63,38 +50,12 @@ namespace hero.api.Controllers
         /// <param name="hero"></param>
         /// <returns></returns>
         [HttpPut]
-        public ActionResult Put([FromBody] Hero hero)
+        public ActionResult<ApiResult<Hero>> Put([FromBody] UpdateHeroInput hero)
         {
-            var result = new ApiResult();
-            if (!ModelState.IsValid)
-            {
-                result.Message = "Invalid Hero Information";
-                result.IsError = true;
-                return BadRequest(result);
-            }
-
-            var dbHero = dbContext.Heroes
-                .Where(h => h.Id == hero.Id)
-                .FirstOrDefault();
-
-            if (dbHero == null)
-            {
-                result.Message = $"Hero with id {hero.Id} not found";
-                result.IsError = true;
-                return BadRequest(result);
-            }
-                
-
-            dbHero.Name = hero.Name;
-            dbHero.SuperPower = hero.SuperPower;
-
-            dbContext.Update(dbHero);
-            dbContext.SaveChanges();
-
-            result.Message = "Everything is ok";
-            return Ok(result);
+            return _heroService.Update(hero);
         }
 
+        /*
         /// <summary>
         /// Removes a hero from Justice league
         /// </summary>
@@ -129,5 +90,8 @@ namespace hero.api.Controllers
             result.Message = "Everything is ok";
             return Ok(result);
         }
+        */
+
+
     }
 }

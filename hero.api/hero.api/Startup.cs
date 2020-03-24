@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using hero.api.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -15,6 +14,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using hero.infraestructure.EF.Contexts;
+using hero.domain.Repositories;
+using hero.infraestructure.EF.Repositories;
+using hero.domain.Entities;
+using hero.aplication.Services.Interfaces;
+using hero.aplication.Services.Implementations;
+using hero.transversal.ErrorHandling;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
+using Netploy.Common.Base.Repositories;
 
 namespace hero.api
 {
@@ -31,8 +40,17 @@ namespace hero.api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            var connectionString = "Data Source=Hero.db";
-            services.AddDbContext<HeroDbContext>(options => options.UseSqlite(connectionString));
+
+            var connectionString = Configuration.GetSection("Settings").GetConnectionString("DefaultConnection");
+            services.AddDbContext<HeroDbContext>(options => options.UseMySQL(connectionString));
+
+            // Repositories
+            services.AddScoped(typeof(IBaseRepository<>),typeof(BaseRepository<>));
+            services.AddScoped<IHeroRepository, HeroRepository>();
+
+            // Application Services
+            services.AddScoped<IHeroApplicationService, HeroApplicationService>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
@@ -57,6 +75,7 @@ namespace hero.api
             }
 
             app.UseHttpsRedirection();
+            app.UseErrorHandling();
             app.UseMvc();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -68,6 +87,19 @@ namespace hero.api
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
+
+            using (var serviceScope = app.ApplicationServices
+            .GetRequiredService<IServiceScopeFactory>()
+            .CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<HeroDbContext>())
+                {
+                    if (!(context.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator).Exists())
+                        context.Database.EnsureCreated();
+                    else if(context.Database.GetPendingMigrations().Count() > 0)
+                        context.Database.Migrate();
+                }
+            }
         }
     }
 }

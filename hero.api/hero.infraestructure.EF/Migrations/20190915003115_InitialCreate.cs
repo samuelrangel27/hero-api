@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace hero.api.Migrations
+namespace hero.infraestructure.EF.Migrations
 {
     public partial class InitialCreate : Migration
     {
@@ -11,9 +12,10 @@ namespace hero.api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: true),
-                    SuperPower = table.Column<string>(nullable: true)
+                        .Annotation("MySQL:AutoIncrement", true),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    SuperPower = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
