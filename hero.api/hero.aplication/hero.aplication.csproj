@@ -12,6 +12,7 @@
     <Folder Include="DTOs\Inputs\" />
     <Folder Include="Mappers\" />
     <Folder Include="DTOs\Inputs\Hero\" />
+    <Folder Include="DTOs\Inputs\Power\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\hero.transversal\hero.transversal.csproj" />

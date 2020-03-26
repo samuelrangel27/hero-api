@@ -3,6 +3,7 @@ using hero.aplication.DTOs.Inputs.Hero;
 using hero.aplication.Services.Interfaces;
 using hero.domain.Entities;
 using hero.domain.Repositories;
+using Netploy.Common.Application.Base;
 
 namespace hero.aplication.Services.Implementations
 {

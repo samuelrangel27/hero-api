@@ -6,8 +6,8 @@ using hero.api.Results;
 using hero.aplication.DTOs.Inputs.Hero;
 using hero.aplication.Services.Interfaces;
 using hero.domain.Entities;
-using hero.transversal.Results;
 using Microsoft.AspNetCore.Mvc;
+using Netploy.Common.Api.Results;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
