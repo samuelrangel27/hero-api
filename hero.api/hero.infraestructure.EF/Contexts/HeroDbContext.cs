@@ -8,6 +8,9 @@ namespace hero.infraestructure.EF.Contexts
     public class HeroDbContext: DbContext
     {
         public DbSet<Hero> Heroes { get; set; }
+        public DbSet<Power> Powers { get; set; }
+        public DbSet<Team> Teams { get; set; }
+        public DbSet<Mission> Missions { get; set; }
 
         public HeroDbContext()
         {
@@ -61,6 +64,18 @@ namespace hero.infraestructure.EF.Contexts
                 .HasOne(hp => hp.Team)
                 .WithMany(hp => hp.Members)
                 .HasForeignKey(hp => hp.TeamId);
+
+            modelBuilder.Entity<Mission>()
+                .HasKey(m => m.Id);
+
+            modelBuilder.Entity<MissionHero>()
+                .HasKey(mh => new { mh.HeroId, mh.MissionId });
+            modelBuilder.Entity<MissionHero>()
+                .HasOne(mh => mh.Mission)
+                .WithMany(mh => mh.Heroes);
+            modelBuilder.Entity<MissionHero>()
+                .HasOne(mh => mh.Hero)
+                .WithMany(mh => mh.Missions);
         }
     }
 }

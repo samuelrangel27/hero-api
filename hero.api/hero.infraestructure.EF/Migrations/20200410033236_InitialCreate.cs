@@ -3,33 +3,52 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace hero.infraestructure.EF.Migrations
 {
-    public partial class DatabaseRefactor : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "SuperPower",
-                table: "Heroes");
-
-            migrationBuilder.AddColumn<string>(
-                name: "Alias",
-                table: "Heroes",
-                nullable: true);
-
-            migrationBuilder.AddColumn<int>(
-                name: "Range",
-                table: "Heroes",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<int>(
-                name: "SenseiId",
-                table: "Heroes",
-                nullable: false,
-                defaultValue: 0);
+            migrationBuilder.CreateTable(
+                name: "Heroes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:AutoIncrement", true),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Alias = table.Column<string>(nullable: true),
+                    Range = table.Column<int>(nullable: false),
+                    SenseiId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Heroes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Heroes_Heroes_SenseiId",
+                        column: x => x.SenseiId,
+                        principalTable: "Heroes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.CreateTable(
-                name: "Power",
+                name: "Missions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:AutoIncrement", true),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    MissionName = table.Column<string>(nullable: true),
+                    ThreatName = table.Column<string>(nullable: true),
+                    ThreatLevel = table.Column<int>(nullable: false),
+                    Status = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Missions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Powers",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -40,11 +59,11 @@ namespace hero.infraestructure.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Power", x => x.Id);
+                    table.PrimaryKey("PK_Powers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Team",
+                name: "Teams",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -55,7 +74,31 @@ namespace hero.infraestructure.EF.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Team", x => x.Id);
+                    table.PrimaryKey("PK_Teams", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MissionHero",
+                columns: table => new
+                {
+                    MissionId = table.Column<int>(nullable: false),
+                    HeroId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MissionHero", x => new { x.HeroId, x.MissionId });
+                    table.ForeignKey(
+                        name: "FK_MissionHero_Heroes_HeroId",
+                        column: x => x.HeroId,
+                        principalTable: "Heroes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MissionHero_Missions_MissionId",
+                        column: x => x.MissionId,
+                        principalTable: "Missions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,9 +118,9 @@ namespace hero.infraestructure.EF.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_HeroPower_Power_PowerId",
+                        name: "FK_HeroPower_Powers_PowerId",
                         column: x => x.PowerId,
-                        principalTable: "Power",
+                        principalTable: "Powers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -99,9 +142,9 @@ namespace hero.infraestructure.EF.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_HeroTeam_Team_TeamId",
+                        name: "FK_HeroTeam_Teams_TeamId",
                         column: x => x.TeamId,
-                        principalTable: "Team",
+                        principalTable: "Teams",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -121,21 +164,14 @@ namespace hero.infraestructure.EF.Migrations
                 table: "HeroTeam",
                 column: "TeamId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Heroes_Heroes_SenseiId",
-                table: "Heroes",
-                column: "SenseiId",
-                principalTable: "Heroes",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+            migrationBuilder.CreateIndex(
+                name: "IX_MissionHero_MissionId",
+                table: "MissionHero",
+                column: "MissionId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Heroes_Heroes_SenseiId",
-                table: "Heroes");
-
             migrationBuilder.DropTable(
                 name: "HeroPower");
 
@@ -143,32 +179,19 @@ namespace hero.infraestructure.EF.Migrations
                 name: "HeroTeam");
 
             migrationBuilder.DropTable(
-                name: "Power");
+                name: "MissionHero");
 
             migrationBuilder.DropTable(
-                name: "Team");
+                name: "Powers");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Heroes_SenseiId",
-                table: "Heroes");
+            migrationBuilder.DropTable(
+                name: "Teams");
 
-            migrationBuilder.DropColumn(
-                name: "Alias",
-                table: "Heroes");
+            migrationBuilder.DropTable(
+                name: "Heroes");
 
-            migrationBuilder.DropColumn(
-                name: "Range",
-                table: "Heroes");
-
-            migrationBuilder.DropColumn(
-                name: "SenseiId",
-                table: "Heroes");
-
-            migrationBuilder.AddColumn<string>(
-                name: "SuperPower",
-                table: "Heroes",
-                nullable: false,
-                defaultValue: "");
+            migrationBuilder.DropTable(
+                name: "Missions");
         }
     }
 }

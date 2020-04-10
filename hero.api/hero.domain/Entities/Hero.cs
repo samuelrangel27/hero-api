@@ -27,8 +27,6 @@ namespace hero.domain.Entities
 
         public IEnumerable<Hero> Students { get; set; }
 
-        public Hero()
-        {
-        }
+        public IEnumerable<MissionHero> Missions { get; set; }
     }
 }

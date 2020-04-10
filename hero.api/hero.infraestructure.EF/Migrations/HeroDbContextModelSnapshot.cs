@@ -65,6 +65,39 @@ namespace hero.infraestructure.EF.Migrations
                     b.ToTable("HeroTeam");
                 });
 
+            modelBuilder.Entity("hero.domain.Entities.Mission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreationDate");
+
+                    b.Property<string>("MissionName");
+
+                    b.Property<int>("Status");
+
+                    b.Property<int>("ThreatLevel");
+
+                    b.Property<string>("ThreatName");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Missions");
+                });
+
+            modelBuilder.Entity("hero.domain.Entities.MissionHero", b =>
+                {
+                    b.Property<int>("HeroId");
+
+                    b.Property<int>("MissionId");
+
+                    b.HasKey("HeroId", "MissionId");
+
+                    b.HasIndex("MissionId");
+
+                    b.ToTable("MissionHero");
+                });
+
             modelBuilder.Entity("hero.domain.Entities.Power", b =>
                 {
                     b.Property<int>("Id")
@@ -78,7 +111,7 @@ namespace hero.infraestructure.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Power");
+                    b.ToTable("Powers");
                 });
 
             modelBuilder.Entity("hero.domain.Entities.Team", b =>
@@ -94,7 +127,7 @@ namespace hero.infraestructure.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Team");
+                    b.ToTable("Teams");
                 });
 
             modelBuilder.Entity("hero.domain.Entities.Hero", b =>
@@ -128,6 +161,19 @@ namespace hero.infraestructure.EF.Migrations
                     b.HasOne("hero.domain.Entities.Team", "Team")
                         .WithMany("Members")
                         .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("hero.domain.Entities.MissionHero", b =>
+                {
+                    b.HasOne("hero.domain.Entities.Hero", "Hero")
+                        .WithMany("Missions")
+                        .HasForeignKey("HeroId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("hero.domain.Entities.Mission", "Mission")
+                        .WithMany("Heroes")
+                        .HasForeignKey("MissionId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
