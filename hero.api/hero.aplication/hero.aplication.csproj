@@ -12,10 +12,12 @@
     <Folder Include="DTOs\Inputs\" />
     <Folder Include="Mappers\" />
     <Folder Include="DTOs\Inputs\Hero\" />
+    <Folder Include="DTOs\Inputs\Power\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\hero.transversal\hero.transversal.csproj" />
     <ProjectReference Include="..\hero.domain\hero.domain.csproj" />
+    <ProjectReference Include="..\hero.infraestructure.EF\hero.infraestructure.EF.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
