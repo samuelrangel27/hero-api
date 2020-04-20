@@ -6,6 +6,8 @@ using hero.api.Results;
 using hero.aplication.DTOs.Inputs.Hero;
 using hero.aplication.Services.Interfaces;
 using hero.domain.Entities;
+using hero.infraestructure.EF.Contexts;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
 using Netploy.Common.Api.Results;
 
@@ -14,12 +16,14 @@ using Netploy.Common.Api.Results;
 namespace hero.api.Controllers
 {
     [Route("api/[controller]")]
-    public class HeroController : Controller
+    public class HeroController : ODataController
     {
+        private readonly HeroDbContext _dbContext;
         private readonly IHeroApplicationService _heroService;
 
-        public HeroController(IHeroApplicationService heroService)
+        public HeroController(HeroDbContext dbContext,IHeroApplicationService heroService)
         {
+            this._dbContext = dbContext;
             this._heroService = heroService;
         }
 
@@ -28,9 +32,10 @@ namespace hero.api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult<ApiResult<IEnumerable<Hero>>> Get()
+        [EnableQuery]
+        public IQueryable<Hero> Get()
         {
-            return _heroService.GetAll();
+            return _dbContext.Set<Hero>().AsQueryable();
         }
 
         /// <summary>

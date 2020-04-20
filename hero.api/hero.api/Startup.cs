@@ -24,6 +24,9 @@ using hero.transversal.ErrorHandling;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Netploy.Common.Base.Repositories;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.OData.Edm;
+using Microsoft.AspNet.OData.Builder;
 
 namespace hero.api
 {
@@ -39,13 +42,14 @@ namespace hero.api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddOData();
+            services.AddMvc(mvc => mvc.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             var connectionString = Configuration.GetSection("Settings").GetConnectionString("DefaultConnection");
             services.AddDbContext<HeroDbContext>(options => options.UseMySQL(connectionString));
 
             // Repositories
-            services.AddScoped(typeof(IBaseRepository<>),typeof(BaseRepository<>));
+            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IHeroRepository, HeroRepository>();
 
             // Application Services
@@ -76,7 +80,13 @@ namespace hero.api
 
             app.UseHttpsRedirection();
             app.UseErrorHandling();
-            app.UseMvc();
+            
+            app.UseMvc(x =>
+            {
+                x.Select().Expand().Filter().OrderBy().MaxTop(1000).Count();
+                x.EnableDependencyInjection();
+                x.MapODataServiceRoute("odata", "odata", GetEdmModel());
+            });
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -89,17 +99,32 @@ namespace hero.api
             });
 
             using (var serviceScope = app.ApplicationServices
-            .GetRequiredService<IServiceScopeFactory>()
-            .CreateScope())
+                                        .GetRequiredService<IServiceScopeFactory>()
+                                        .CreateScope())
             {
                 using (var context = serviceScope.ServiceProvider.GetService<HeroDbContext>())
                 {
                     if (!(context.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator).Exists())
                         context.Database.EnsureCreated();
-                    else if(context.Database.GetPendingMigrations().Count() > 0)
+                    else if (context.Database.GetPendingMigrations().Count() > 0)
                         context.Database.Migrate();
                 }
             }
+        }
+
+        private static IEdmModel GetEdmModel()
+        {
+            Type contextType = typeof(HeroDbContext);
+            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            PropertyInfo[] propertyInfos = contextType.GetProperties().Where(pi => pi.PropertyType.Name.StartsWith("DbSet", StringComparison.Ordinal)).ToArray();
+            MethodInfo builderMethodInfo = typeof(ODataConventionModelBuilder).GetMethod("EntitySet");
+            foreach (var pi in propertyInfos)
+            {
+                var typeName = pi.PropertyType.GenericTypeArguments[0];
+                MethodInfo genericBuilder = builderMethodInfo.MakeGenericMethod(typeName);
+                genericBuilder.Invoke(builder, new object[] { typeName.Name });
+            }
+            return builder.GetEdmModel();
         }
     }
 }
